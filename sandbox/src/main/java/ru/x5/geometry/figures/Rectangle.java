@@ -1,9 +1,9 @@
 package ru.x5.geometry.figures;
 
 public record Rectangle(double a, double b) {
-    
+
     public static void printRectangleArea(double a, double b) {
-        var text = String.format("Площадь прямоугольника со сторонами %f и %f = %f", a, b, rectangleArea(a, b));
+        var text = String.format("Площадь прямоугольника со сторонами %.1f и %.1f = %.1f", a, b, rectangleArea(a, b));
         System.out.println(text);
     }
 
