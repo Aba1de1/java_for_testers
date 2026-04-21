@@ -18,11 +18,16 @@ public class SquareTests {
     }
 
     @Test
-    void calCalculateTriangle(){
+    void calTriangle(){
         Triangle triangle = new Triangle(3.0,4.0,5.0);
-        Assertions.assertEquals(6.0, triangle.calculateArea());
+        double expectedArea = 6.0;
+        double expectedPerimeter = 12.0;
+        double actualArea = triangle.calculateArea();
+        double actualPerimeter = triangle.perimeter();
+        Assertions.assertEquals(expectedArea,actualArea);
+        Assertions.assertEquals(expectedPerimeter, actualPerimeter);
     }
-
 }
+
 
 

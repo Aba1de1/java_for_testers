@@ -1,12 +1,6 @@
 package ru.x5.geometry.figures;
 
-public class Square {
-
-    private final double side;
-
-    public Square(double side) {
-        this.side = side;
-    }
+public record Square (double side){
 
     public static void printSquareArea(Square s) {
         String text = String.format("Площадь квадрата со стороной %.1f = %.1f", s.side, s.area());
