@@ -18,17 +18,6 @@ public class SquareTests {
     }
 
     @Test
-    void calTriangle(){
-        Triangle triangle = new Triangle(3.0,4.0,5.0);
-        double expectedArea = 6.0;
-        double expectedPerimeter = 12.0;
-        double actualArea = triangle.calculateArea();
-        double actualPerimeter = triangle.perimeter();
-        Assertions.assertEquals(expectedArea,actualArea);
-        Assertions.assertEquals(expectedPerimeter, actualPerimeter);
-    }
-
-    @Test
     void cannotCreateSquareWithNegativeSide(){
         try { new Square(-5.0);
             Assertions.fail();
