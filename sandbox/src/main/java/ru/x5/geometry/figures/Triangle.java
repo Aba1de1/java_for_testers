@@ -1,5 +1,8 @@
 package ru.x5.geometry.figures;
 
+import java.util.Arrays;
+import java.util.Objects;
+
 public record Triangle(double a, double b, double c) {
 
     public Triangle{
@@ -27,6 +30,25 @@ public record Triangle(double a, double b, double c) {
     public double perimeter(){
 
         return a + b + c;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Triangle that = (Triangle) o;
+        double[] thisSides = {this.a, this.b, this.c};
+        double[] thatSides = {that.a, that.b, that.c};
+        Arrays.sort(thisSides);
+        Arrays.sort(thisSides);
+        return Arrays.equals(thisSides, thatSides);
+    }
+
+    @Override
+    public int hashCode() {
+        double[] sides = {a, b, c};
+        Arrays.sort(sides);
+        return Arrays.hashCode(sides);
     }
 }
 
