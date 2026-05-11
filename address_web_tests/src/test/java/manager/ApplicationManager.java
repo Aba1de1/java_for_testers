@@ -9,17 +9,19 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 
 public class ApplicationManager {
 
-    protected WebDriver driver;
+    public WebDriver driver;
 
     private LoginHelper session;
 
     private GroupHelper groups;
 
+    private ContactHelper contacts;
+
     public void init(String browser) {
         if (driver == null) {
             if ("firefox".equals(browser)) {
                 driver = new FirefoxDriver();
-            } else if ("chrome".equals(browser)){
+            } else if ("chrome".equals(browser)) {
                 driver = new ChromeDriver();
             } else {
                 throw new IllegalArgumentException(String.format("Unknow browser %s", browser));
@@ -31,8 +33,16 @@ public class ApplicationManager {
             session().login("admin", "secret");
         }
     }
-    public GroupHelper groups(){
-        if (groups == null){
+
+    public ContactHelper contacts() {
+        if (contacts == null) {
+            contacts = new ContactHelper(this);
+        }
+        return contacts;
+    }
+
+    public GroupHelper groups() {
+        if (groups == null) {
             groups = new GroupHelper(this);
         }
         return groups;
@@ -45,6 +55,7 @@ public class ApplicationManager {
         return session;
     }
 
+
     public boolean isElementPresent(By locator) {
         try {
             driver.findElement(locator);
@@ -53,5 +64,4 @@ public class ApplicationManager {
             return false;
         }
     }
-
 }
