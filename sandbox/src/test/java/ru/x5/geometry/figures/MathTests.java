@@ -1,3 +1,5 @@
+package ru.x5.geometry.figures;
+
 import org.junit.jupiter.api.Test;
 
 public class MathTests {
