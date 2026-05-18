@@ -15,9 +15,29 @@ public class GroupHelper extends HelperBase {
         }
     }
 
-    public boolean isGroupPresent() {
-        openGroupsPage();
-        return manager.isElementPresent(By.name("selected[]"));
+
+    private void submitGroupCreation() {
+        click(By.name("submit"));
+    }
+
+    private void initGroupCreation() {
+        click(By.name("new"));
+    }
+
+    private void returnToGroupsPage() {
+        click(By.linkText("group page"));
+    }
+
+    private void initGroupModification() {
+        click(By.name("edit"));
+    }
+
+    private void removeSelectedGroups() {
+        click(By.name("delete"));
+    }
+
+    private void selectGroup() {
+        click(By.name("selected[]"));
     }
 
     public void createGroup(GroupData group) {
@@ -28,19 +48,10 @@ public class GroupHelper extends HelperBase {
         returnToGroupsPage();
     }
 
-    private void submitGroupCreation() {
-        click(By.name("submit"));
-    }
-
-
-    private void initGroupCreation() {
-        click(By.name("new"));
-    }
-
     public void removeGroup() {
         openGroupsPage();
         selectGroup();
-        click(By.name("delete"));
+        removeAllGroups();
         returnToGroupsPage();
     }
 
@@ -51,10 +62,6 @@ public class GroupHelper extends HelperBase {
         fillGroupForm(modifiedGroup);
         submitGroupModification();
         returnToGroupsPage();
-    }
-
-    private void returnToGroupsPage() {
-        click(By.linkText("group page"));
     }
 
     private void submitGroupModification() {
@@ -68,13 +75,21 @@ public class GroupHelper extends HelperBase {
         type(By.name("group_footer"), group.footer());
     }
 
-    private void initGroupModification() {
-        click(By.name("edit"));
 
+    public int getCount() {
+        openGroupsPage();
+        return manager.driver.findElements(By.name("selected[]")).size();
     }
 
-    private void selectGroup() {
-        click(By.name("selected[]"));
+    public void removeAllGroups() {
+        selectAllGroups();
+        removeSelectedGroups();
     }
 
+    private void selectAllGroups() {
+        var checkboxes = manager.driver.findElements(By.name("selected[]"));
+        for (var checkbox : checkboxes) {
+            checkbox.click();
+        }
+    }
 }

@@ -15,16 +15,34 @@ public class ContactHelper extends HelperBase {
             click(By.linkText("home"));
         }
     }
+    private void submitContactCreation() {
+        click(By.name("submit"));
+    }
 
+    private void returnToHomePage() {
+        click(By.linkText("home page"));
+    }
+
+        private void clickDelete() {
+        click(By.name("delete"));
+    }
+
+    private void initContactCreation() {
+        click(By.linkText("add new"));
+    }
     public boolean isContactPresent(){
         openContactsPage();
         return manager.isElementPresent(By.name("selected[]"));
     }
 
+    private void selectDropdown(By locator, String value) {
+        WebElement dropdown = manager.driver.findElement(locator);
+        dropdown.findElement(By.xpath(String.format("//option[. = '%s']", value))).click();
+}
     public void removeContact(){
         openContactsPage();
-        selectContact();
-        click(By.name("delete"));
+        getCount();
+        clickDelete();
         returnToHomePage();
     }
 
@@ -36,16 +54,19 @@ public class ContactHelper extends HelperBase {
         returnToHomePage();
     }
 
-    private void initContactCreation() {
-        click(By.linkText("add new"));
-    }
-
     private void fillContactForm(ContactData contact) {
-        type(By.name("firstname"), contact.firstname());
+        if (contact.firstname() != null) {
+            type(By.name("firstname"), contact.firstname());
+        }
+        if (contact.lastname() != null) {
         type(By.name("lastname"), contact.lastname());
+        }
+        if (contact.nickname() != null) {
         type(By.name("nickname"), contact.nickname());
+        }
+        if (contact.bday() != null) {
         type(By.name("email"), contact.email());
-
+        }
         if (contact.bday() != null) {
             selectDropdown(By.name("bday"), contact.bday());
         }
@@ -57,20 +78,8 @@ public class ContactHelper extends HelperBase {
         }
     }
 
-    private void selectDropdown(By locator, String value) {
-        WebElement dropdown = manager.driver.findElement(locator);
-        dropdown.findElement(By.xpath(String.format("//option[. = '%s']", value))).click();
-    }
-
-    private void submitContactCreation() {
-        click(By.name("submit"));
-    }
-
-    private void returnToHomePage() {
-        click(By.linkText("home page"));
-    }
-
-    private void selectContact() {
-        click(By.name("selected[]"));
+    public int getCount() {
+        openContactsPage();
+        return manager.driver.findElements(By.name("selected[]")).size();
     }
 }
