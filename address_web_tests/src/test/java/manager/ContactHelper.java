@@ -4,6 +4,9 @@ import model.ContactData;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ContactHelper extends HelperBase {
 
     public ContactHelper(ApplicationManager manager) {
@@ -15,6 +18,7 @@ public class ContactHelper extends HelperBase {
             click(By.linkText("home"));
         }
     }
+
     private void submitContactCreation() {
         click(By.name("submit"));
     }
@@ -23,7 +27,7 @@ public class ContactHelper extends HelperBase {
         click(By.linkText("home page"));
     }
 
-        private void clickDelete() {
+    private void clickDelete() {
         click(By.name("delete"));
     }
 
@@ -31,36 +35,50 @@ public class ContactHelper extends HelperBase {
         openContactsPage();
         return manager.driver.findElements(By.name("selected[]")).size();
     }
+
     private void selectAllContact() {
         var checkboxes = manager.driver.findElements(By.name("selected[]"));
         for (var checkbox : checkboxes) {
             checkbox.click();
         }
     }
-    public void removeAllContacts(){
+
+    public void removeAllContacts() {
+        openContactsPage();
         selectAllContact();
-        removeContact();
+        clickDelete();
+        try {
+            var alert = manager.driver.switchTo().alert();
+            alert.accept();
+        } catch (org.openqa.selenium.NoAlertPresentException e) {
+            System.out.println("No alert present after click delete");
+        }
+        returnToHomePage();
     }
-    public void selectContact(){
+
+    public void selectContact() {
         click(By.name("selected[]"));
     }
 
     private void initContactCreation() {
         click(By.linkText("add new"));
     }
-    public boolean isContactPresent(){
-        openContactsPage();
-        return manager.isElementPresent(By.name("selected[]"));
-    }
 
     private void selectDropdown(By locator, String value) {
         WebElement dropdown = manager.driver.findElement(locator);
         dropdown.findElement(By.xpath(String.format("//option[. = '%s']", value))).click();
-}
-    public void removeContact(){
+    }
+
+    public void removeContact(ContactData contact) {
         openContactsPage();
         selectContact();
         clickDelete();
+        try {
+            var alert = manager.driver.switchTo().alert();
+            alert.accept();
+        } catch (org.openqa.selenium.NoAlertPresentException e) {
+            System.out.println("No alert present after click delete");
+        }
         returnToHomePage();
     }
 
@@ -77,13 +95,13 @@ public class ContactHelper extends HelperBase {
             type(By.name("firstname"), contact.firstname());
         }
         if (contact.lastname() != null) {
-        type(By.name("lastname"), contact.lastname());
+            type(By.name("lastname"), contact.lastname());
         }
         if (contact.nickname() != null) {
-        type(By.name("nickname"), contact.nickname());
+            type(By.name("nickname"), contact.nickname());
         }
         if (contact.bday() != null) {
-        type(By.name("email"), contact.email());
+            type(By.name("email"), contact.email());
         }
         if (contact.bday() != null) {
             selectDropdown(By.name("bday"), contact.bday());
@@ -96,4 +114,19 @@ public class ContactHelper extends HelperBase {
         }
     }
 
+    public List<ContactData> getListContacts() {
+        openContactsPage();
+        var contacts = new ArrayList<ContactData>();
+        var rows = manager.driver.findElements(By.cssSelector("tr[name='entry']"));
+        for (var row : rows) {
+            var firstname = row.findElement(By.xpath("./td[3]")).getText();
+            var lastname = row.findElement(By.xpath("./td[2]")).getText();
+            var email = "";
+            contacts.add(new ContactData()
+                    .withFirstname(firstname)
+                    .withLastname(lastname)
+                    .withEmail(email));
+        }
+        return contacts;
+    }
 }

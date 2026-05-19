@@ -26,7 +26,16 @@ public class TestBase {
         return result;
     }
 
-    protected static String randomEmail() {
-        return randomString(8) + "@email.com";
+    public static String randomContact(int length) {
+        String characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        StringBuilder result = new StringBuilder();
+        for (int i = 0; i < length; i++) {
+            result.append(characters.charAt((int) (Math.random() * characters.length())));
+        }
+        return result.toString();
+    }
+
+    public static String randomEmail() {
+        return randomContact(8) + "@example.com";
     }
 }

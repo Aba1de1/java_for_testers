@@ -1,5 +1,7 @@
 package model;
 
+import java.util.Objects;
+
 public class ContactData {
     private String firstname;
     private String lastname;
@@ -70,5 +72,23 @@ public class ContactData {
 
     public String byear() {
         return byear;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ContactData that = (ContactData) o;
+        return Objects.equals(firstname, that.firstname) &&
+                Objects.equals(lastname, that.lastname) &&
+                Objects.equals(email, that.email) &&
+                Objects.equals(bday, that.bday) &&
+                Objects.equals(bmonth, that.bmonth) &&
+                Objects.equals(byear, that.byear);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(firstname, lastname, email, bday, bmonth, byear);
     }
 }

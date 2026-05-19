@@ -4,10 +4,13 @@ import model.ContactData;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+import java.util.Random;
+
 public class RemoveContactTest extends TestBase {
 
     @Test
-    public void canCreateContact() {
+    public void canRemoveContact() {
         if(app.contacts().getCount() == 0){
         app.contacts().createContact(new ContactData()
                 .withFirstname("Dont")
@@ -18,10 +21,12 @@ public class RemoveContactTest extends TestBase {
                 .withBmonth("December")
                 .withByear("2007"));
         }
-        int contactCount = app.contacts().getCount();
-        app.contacts().removeContact();
-        int NewContactCount = app.contacts().getCount();
-        Assertions.assertEquals(contactCount + 1, NewContactCount);
+        var oldContacts = app.contacts().getListContacts();
+        var contactToRemove = oldContacts.get(0);
+        app.contacts().removeContact(contactToRemove);
+        var newContacts = app.contacts().getListContacts();
+        oldContacts.remove(contactToRemove);
+        Assertions.assertEquals(newContacts, oldContacts);
     }
 
     @Test
@@ -37,6 +42,6 @@ public class RemoveContactTest extends TestBase {
                     .withByear("2007"));
         }
         app.contacts().removeAllContacts();
-        Assertions.assertEquals(1, app.contacts().getCount());
+        Assertions.assertEquals(0, app.contacts().getCount());
     }
 }
