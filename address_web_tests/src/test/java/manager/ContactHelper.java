@@ -129,4 +129,21 @@ public class ContactHelper extends HelperBase {
         }
         return contacts;
     }
+
+    public void modifyContact(ContactData contactToModify, ContactData modifyData) {
+        openContactsPage();
+        clickEdit(1);
+        fillContactForm(modifyData);
+        submitModifyContact();
+        returnToHomePage();
+
+    }
+
+    private void submitModifyContact() {
+        click(By.name("update"));
+    }
+
+    private void clickEdit(int editIndex) {
+        click(By.xpath("(//img[@alt='Edit'])[" + editIndex + "]"));
+    }
 }

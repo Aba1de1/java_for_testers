@@ -21,7 +21,10 @@ public class AddContactTest extends TestBase {
             }
         }
         for (int i = 0; i < 5; i++) {
-            result.add(new ContactData().withFirstname(randomContact(10)).withLastname(randomContact(10)).withEmail(randomEmail()));
+            result.add(new ContactData()
+                    .withFirstname(randomContact(10))
+                    .withLastname(randomContact(10))
+                    .withEmail(randomEmail()));
         }
         return result;
     }
@@ -34,7 +37,9 @@ public class AddContactTest extends TestBase {
         var newContacts = app.contacts().getListContacts();
         var expectedList = new ArrayList<>(oldContacts);
         expectedList.add(contact);
-        Comparator<ContactData> compareById = Comparator.comparing(ContactData::firstname, Comparator.nullsFirst(String::compareTo)).thenComparing(ContactData::lastname, Comparator.nullsFirst(String::compareTo));
+        Comparator<ContactData> compareById = Comparator
+                .comparing(ContactData::firstname, Comparator.nullsFirst(String::compareTo))
+                .thenComparing(ContactData::lastname, Comparator.nullsFirst(String::compareTo));
         expectedList.sort(compareById);
         newContacts.sort(compareById);
         Assertions.assertEquals(expectedList, newContacts);
