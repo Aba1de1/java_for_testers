@@ -29,15 +29,16 @@ public class ModificationContactTest extends TestBase {
                 .withFirstname("Modified")
                 .withLastname("I was")
                 .withEmail("modifyDone@email.com");
-        app.contacts().modifyContact(oldContacts.get(index), modifyData);
+        app.contacts().modifyContact(index, modifyData);
         var newContacts = app.contacts().getListContacts();
         var expectedList = new ArrayList<>(oldContacts);
-        expectedList.add(modifyData);
+        expectedList.set(index, modifyData);
         Comparator<ContactData> compareByName = Comparator
                 .comparing(ContactData::firstname, Comparator.nullsFirst(String::compareTo))
                 .thenComparing(ContactData::lastname, Comparator.nullsFirst(String::compareTo));
         newContacts.sort(compareByName);
         expectedList.sort(compareByName);
+
         Assertions.assertEquals(expectedList, newContacts);
     }
 }

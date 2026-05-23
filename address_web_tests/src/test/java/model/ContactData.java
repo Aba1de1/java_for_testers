@@ -3,6 +3,7 @@ package model;
 import java.util.Objects;
 
 public class ContactData {
+    private String photo;
     private String firstname;
     private String lastname;
     private String nickname;
@@ -45,6 +46,10 @@ public class ContactData {
         this.byear = byear;
         return this;
     }
+    public ContactData withPhoto(String photo){
+        this.photo = photo;
+        return this;
+    }
 
     public String firstname() {
         return firstname;
@@ -73,6 +78,8 @@ public class ContactData {
     public String byear() {
         return byear;
     }
+
+    public String photo(){return photo;}
 
     @Override
     public boolean equals(Object o) {

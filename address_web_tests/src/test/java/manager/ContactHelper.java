@@ -4,6 +4,7 @@ import model.ContactData;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -64,6 +65,7 @@ public class ContactHelper extends HelperBase {
         click(By.linkText("add new"));
     }
 
+
     private void selectDropdown(By locator, String value) {
         WebElement dropdown = manager.driver.findElement(locator);
         dropdown.findElement(By.xpath(String.format("//option[. = '%s']", value))).click();
@@ -100,7 +102,10 @@ public class ContactHelper extends HelperBase {
         if (contact.nickname() != null) {
             type(By.name("nickname"), contact.nickname());
         }
-        if (contact.bday() != null) {
+        if (contact.photo() != null) {
+            selectAttach(By.name("photo"), contact.photo());
+        }
+        if (contact.email() != null) {
             type(By.name("email"), contact.email());
         }
         if (contact.bday() != null) {
@@ -114,6 +119,10 @@ public class ContactHelper extends HelperBase {
         }
     }
 
+    private void selectAttach(By locator, String file) {
+        manager.driver.findElement(locator).sendKeys(Paths.get(file).toAbsolutePath().toString());
+    }
+
     public List<ContactData> getListContacts() {
         openContactsPage();
         var contacts = new ArrayList<ContactData>();
@@ -121,7 +130,8 @@ public class ContactHelper extends HelperBase {
         for (var row : rows) {
             var firstname = row.findElement(By.xpath("./td[3]")).getText();
             var lastname = row.findElement(By.xpath("./td[2]")).getText();
-            var email = "";
+            var email = row.findElement(By.xpath("./td[5]")).getText();
+            ;
             contacts.add(new ContactData()
                     .withFirstname(firstname)
                     .withLastname(lastname)
@@ -130,9 +140,9 @@ public class ContactHelper extends HelperBase {
         return contacts;
     }
 
-    public void modifyContact(ContactData contactToModify, ContactData modifyData) {
+    public void modifyContact(int index, ContactData modifyData) {
         openContactsPage();
-        click(By.xpath(String.format("//input[@value='%s']/../../td[8]/a/img", contactToModify.id())));;
+        click(By.xpath(String.format("//tr[@name='entry'][%d]/td[8]/a/img", index + 1)));
         fillContactForm(modifyData);
         submitModifyContact();
         returnToHomePage();
@@ -143,7 +153,4 @@ public class ContactHelper extends HelperBase {
         click(By.name("update"));
     }
 
-    private void clickEdit() {
-        click(By.xpath(String.format("//input[@value='%s']/../../td[8]/a/img", contactToModify.id())));
-    }
 }
