@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Random;
 
 public class ModificationContactTest extends TestBase {
 
@@ -22,20 +23,21 @@ public class ModificationContactTest extends TestBase {
                     .withByear("2007"));
         }
         var oldContacts = app.contacts().getListContacts();
-        var contactToModify = oldContacts.get(0);
+        var rnd = new Random();
+        var index = rnd.nextInt(oldContacts.size());
         var modifyData = new ContactData()
-                .withFirstname("I was")
-                .withLastname("Modified")
+                .withFirstname("Modified")
+                .withLastname("I was")
                 .withEmail("modifyDone@email.com");
-        app.contacts().modifyContact(contactToModify, modifyData);
+        app.contacts().modifyContact(oldContacts.get(index), modifyData);
         var newContacts = app.contacts().getListContacts();
         var expectedList = new ArrayList<>(oldContacts);
         expectedList.add(modifyData);
         Comparator<ContactData> compareByName = Comparator
                 .comparing(ContactData::firstname, Comparator.nullsFirst(String::compareTo))
                 .thenComparing(ContactData::lastname, Comparator.nullsFirst(String::compareTo));
-        expectedList.sort(compareByName);
         newContacts.sort(compareByName);
+        expectedList.sort(compareByName);
         Assertions.assertEquals(expectedList, newContacts);
     }
 }
