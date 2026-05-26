@@ -8,9 +8,9 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Random;
 
-public class ModificationGroupTest extends TestBase{
+public class ModificationGroupTest extends TestBase {
     @Test
-    void canModifyGroup(){
+    void canModifyGroup() {
         if (app.groups().getCount() == 0) {
             app.groups().createGroup(new GroupData("", "group name", "group header", "group footer"));
         }
