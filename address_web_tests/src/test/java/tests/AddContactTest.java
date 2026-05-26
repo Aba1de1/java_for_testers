@@ -24,7 +24,8 @@ public class AddContactTest extends TestBase {
             result.add(new ContactData()
                     .withFirstname(randomContact(10))
                     .withLastname(randomContact(10))
-                    .withEmail(randomEmail()));
+                    .withEmail(randomEmail())
+                    .withPhoto(randomPhoto("src/test/resources/images")));
         }
         return result;
     }

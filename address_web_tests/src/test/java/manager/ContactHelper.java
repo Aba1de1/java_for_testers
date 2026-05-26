@@ -44,9 +44,13 @@ public class ContactHelper extends HelperBase {
         }
     }
 
+    public void clickSelectAll() {
+        click(By.xpath("//*[@id=\"MassCB\"]"));
+    }
+
     public void removeAllContacts() {
         openContactsPage();
-        selectAllContact();
+        clickSelectAll();
         clickDelete();
         try {
             var alert = manager.driver.switchTo().alert();
