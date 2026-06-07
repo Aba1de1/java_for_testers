@@ -9,11 +9,10 @@ import java.util.Comparator;
 import java.util.Random;
 
 public class ModificationContactTest extends TestBase {
-
     @Test
     void canModifyContact() {
-        if (app.contacts().getCount() == 0) {
-            app.contacts().createContact(new ContactData()
+        if (app.hmb().getContactCount() == 0) {
+            app.hmb().createContact(new ContactData()
                     .withFirstname("You'Can")
                     .withLastname("Modify")
                     .withNickname("Me")
@@ -22,7 +21,7 @@ public class ModificationContactTest extends TestBase {
                     .withBmonth("December")
                     .withByear("2007"));
         }
-        var oldContacts = app.contacts().getListContacts();
+        var oldContacts = app.hmb().getContactList();
         var rnd = new Random();
         var index = rnd.nextInt(oldContacts.size());
         var modifyData = new ContactData()
@@ -30,7 +29,7 @@ public class ModificationContactTest extends TestBase {
                 .withLastname("I was")
                 .withEmail("modifyDone@email.com");
         app.contacts().modifyContact(index, modifyData);
-        var newContacts = app.contacts().getListContacts();
+        var newContacts = app.hmb().getContactList();
         var expectedList = new ArrayList<>(oldContacts);
         expectedList.set(index, modifyData);
         Comparator<ContactData> compareByName = Comparator
@@ -39,6 +38,8 @@ public class ModificationContactTest extends TestBase {
         newContacts.sort(compareByName);
         expectedList.sort(compareByName);
 
+
         Assertions.assertEquals(expectedList, newContacts);
+
     }
 }

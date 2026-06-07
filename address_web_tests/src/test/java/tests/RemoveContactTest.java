@@ -11,8 +11,8 @@ public class RemoveContactTest extends TestBase {
 
     @Test
     public void canRemoveContact() {
-        if(app.contacts().getCount() == 0){
-        app.contacts().createContact(new ContactData()
+        if(app.hmb().getContactCount() == 0){
+        app.hmb().createContact(new ContactData()
                 .withFirstname("Dont")
                 .withLastname("Delete")
                 .withNickname("Me")
@@ -21,10 +21,10 @@ public class RemoveContactTest extends TestBase {
                 .withBmonth("December")
                 .withByear("2007"));
         }
-        var oldContacts = app.contacts().getListContacts();
+        var oldContacts = app.hmb().getContactList();
         var contactToRemove = oldContacts.get(0);
         app.contacts().removeContact(contactToRemove);
-        var newContacts = app.contacts().getListContacts();
+        var newContacts = app.hmb().getContactList();
         oldContacts.remove(contactToRemove);
         Assertions.assertEquals(newContacts, oldContacts);
     }

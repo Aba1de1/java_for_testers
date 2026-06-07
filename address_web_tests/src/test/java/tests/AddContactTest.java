@@ -1,7 +1,10 @@
 package tests;
 
+import common.Common;
 import model.ContactData;
+import model.GroupData;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
@@ -24,8 +27,7 @@ public class AddContactTest extends TestBase {
             result.add(new ContactData()
                     .withFirstname(randomContact(10))
                     .withLastname(randomContact(10))
-                    .withEmail(randomEmail())
-                    .withPhoto(randomPhoto("src/test/resources/images")));
+                    .withEmail(Common.randomEmail()));
         }
         return result;
     }
@@ -44,5 +46,20 @@ public class AddContactTest extends TestBase {
         expectedList.sort(compareById);
         newContacts.sort(compareById);
         Assertions.assertEquals(expectedList, newContacts);
+    }
+
+
+    @Test
+    void canCreatedContactInGroup(){
+        var contact = new ContactData().withFirstname(Common.randomString(10)).withLastname(Common.randomString(10));
+        if (app.hmb().getGroupCount() == 0) {
+            app.hmb().createGroup(new GroupData("", "group name", "group header", "group footer"));
+        }
+        var group = app.hmb().getGroupList().get(0);
+
+        var oldRelated = app.hmb().getContactsIngroup(group);
+        app.contacts().createB(contact, group);
+        var newRelated = app.hmb().getContactsIngroup(group);
+        Assertions.assertEquals(oldRelated.size() +1, newRelated.size());
     }
 }
