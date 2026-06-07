@@ -1,5 +1,6 @@
 package tests;
 
+import com.mysql.cj.exceptions.AssertionFailedException;
 import common.Common;
 import model.ContactData;
 import model.GroupData;
@@ -50,16 +51,29 @@ public class AddContactTest extends TestBase {
 
 
     @Test
-    void canCreatedContactInGroup(){
-        var contact = new ContactData().withFirstname(Common.randomString(10)).withLastname(Common.randomString(10));
+    void canCreatedContactInGroup() {
+        var contact = new ContactData().withFirstname(Common.randomString(10))
+                .withLastname(Common.randomString(10));
         if (app.hmb().getGroupCount() == 0) {
-            app.hmb().createGroup(new GroupData("", "group name", "group header", "group footer"));
+            app.hmb().createGroup(
+                    new GroupData("", "group name", "group header", "group footer"));
         }
         var group = app.hmb().getGroupList().get(0);
-
         var oldRelated = app.hmb().getContactsIngroup(group);
         app.contacts().createB(contact, group);
         var newRelated = app.hmb().getContactsIngroup(group);
-        Assertions.assertEquals(oldRelated.size() +1, newRelated.size());
+        var expectedList = new ArrayList<>(oldRelated);
+        contact.withId(newRelated.stream()
+                .filter(contactData -> !oldRelated.contains(contactData))
+                .findFirst()
+                .orElseThrow(() -> new AssertionFailedException("Контакт не добавлен в группу"))
+                .id());
+        expectedList.add(contact);
+        Comparator<ContactData> compareById = Comparator
+                .comparing(ContactData::firstname, Comparator.nullsFirst(String::compareTo))
+                .thenComparing(ContactData::lastname, Comparator.nullsFirst(String::compareTo));
+        expectedList.sort(compareById);
+        newRelated.sort(compareById);
+        Assertions.assertEquals(expectedList, newRelated);
     }
 }
