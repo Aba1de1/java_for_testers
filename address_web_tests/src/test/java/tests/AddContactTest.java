@@ -76,4 +76,40 @@ public class AddContactTest extends TestBase {
         newRelated.sort(compareById);
         Assertions.assertEquals(expectedList, newRelated);
     }
+
+    @Test
+    void canAddContactInGroup(){
+        if(app.hmb().getContactCount() == 0){
+            app.hmb().createContact(new ContactData()
+                    .withFirstname("Dont")
+                    .withLastname("Delete")
+                    .withNickname("Me")
+                    .withEmail("Please@email.com")
+                    .withBday("7")
+                    .withBmonth("December")
+                    .withByear("2007"));
+        }
+        if (app.hmb().getGroupCount() == 0) {
+            app.hmb().createGroup(
+                    new GroupData("", "group name", "group header", "group footer"));
+        }
+        var contact = app.hmb().getContactList().get(0);
+        var group = app.hmb().getGroupList().get(0);
+        var oldRelated = app.hmb().getContactsIngroup(group);
+        app.contacts().addIntoGroup(contact, group);
+        var newRelated = app.hmb().getContactsIngroup(group);
+        var expectedList = new ArrayList<>(oldRelated);
+        contact.withId(newRelated.stream()
+                .filter(contactData -> !oldRelated.contains(contactData))
+                .findFirst()
+                .orElseThrow(() -> new AssertionFailedException("Контакт не добавлен в группу"))
+                .id());
+        expectedList.add(contact);
+        Comparator<ContactData> compareById = Comparator
+                .comparing(ContactData::firstname, Comparator.nullsFirst(String::compareTo))
+                .thenComparing(ContactData::lastname, Comparator.nullsFirst(String::compareTo));
+        expectedList.sort(compareById);
+        newRelated.sort(compareById);
+        Assertions.assertEquals(expectedList, newRelated);
+    }
 }
