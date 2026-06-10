@@ -78,8 +78,8 @@ public class AddContactTest extends TestBase {
     }
 
     @Test
-    void canAddContactInGroup(){
-        if(app.hmb().getContactCount() == 0){
+    void canAddContactInGroup() {
+        if (app.hmb().getContactCount() == 0) {
             app.hmb().createContact(new ContactData()
                     .withFirstname("Dont")
                     .withLastname("Delete")
@@ -93,18 +93,50 @@ public class AddContactTest extends TestBase {
             app.hmb().createGroup(
                     new GroupData("", "group name", "group header", "group footer"));
         }
-        var contact = app.hmb().getContactList().get(0);
-        var group = app.hmb().getGroupList().get(0);
-        var oldRelated = app.hmb().getContactsIngroup(group);
-        app.contacts().addIntoGroup(contact, group);
-        var newRelated = app.hmb().getContactsIngroup(group);
+        var contacts = app.hmb().getContactList();
+        var groups = app.hmb().getGroupList();
+
+        ContactData contactToAdd = null;
+        GroupData groupToAdd = null;
+
+        outerLoop:
+        for (var group : groups) {
+            var contactsInGroup = app.hmb().getContactsIngroup(group);
+            for (var contact : contacts) {
+                if (!contactsInGroup.contains(contact)) {
+                    contactToAdd = contact;
+                    groupToAdd = group;
+                    break outerLoop;
+                }
+            }
+        }
+        if (contactToAdd == null || groupToAdd == null) {
+            if (contactToAdd == null) {
+                contactToAdd = new ContactData()
+                        .withFirstname("New")
+                        .withLastname("Contact")
+                        .withNickname("Test")
+                        .withEmail("new.contact@email.com")
+                        .withBday("1")
+                        .withBmonth("January")
+                        .withByear("2000");
+                app.hmb().createContact(contactToAdd);
+            }
+            if (groupToAdd == null) {
+                groupToAdd = new GroupData("", "group name", "group header", "group footer");
+                app.hmb().createGroup(groupToAdd);
+            }
+        }
+        var oldRelated = app.hmb().getContactsIngroup(groupToAdd);
+        app.contacts().addIntoGroup(contactToAdd, groupToAdd);
+        var newRelated = app.hmb().getContactsIngroup(groupToAdd);
         var expectedList = new ArrayList<>(oldRelated);
-        contact.withId(newRelated.stream()
+        contactToAdd.withId(newRelated.stream()
                 .filter(contactData -> !oldRelated.contains(contactData))
                 .findFirst()
                 .orElseThrow(() -> new AssertionFailedException("Контакт не добавлен в группу"))
                 .id());
-        expectedList.add(contact);
+        expectedList.add(contactToAdd);
         Comparator<ContactData> compareById = Comparator
                 .comparing(ContactData::firstname, Comparator.nullsFirst(String::compareTo))
                 .thenComparing(ContactData::lastname, Comparator.nullsFirst(String::compareTo));
