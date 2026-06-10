@@ -6,8 +6,6 @@ import org.openqa.selenium.By;
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.lang.String.format;
-
 public class GroupHelper extends HelperBase {
 
     public GroupHelper(ApplicationManager manager) {

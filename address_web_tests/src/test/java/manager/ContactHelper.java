@@ -1,10 +1,15 @@
 package manager;
 
 import model.ContactData;
+import model.GroupData;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.nio.file.Paths;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,83 +25,9 @@ public class ContactHelper extends HelperBase {
         }
     }
 
-    private void submitContactCreation() {
-        click(By.name("submit"));
-    }
-
-    private void returnToHomePage() {
-        click(By.linkText("home page"));
-    }
-
-    private void clickDelete() {
-        click(By.name("delete"));
-    }
-
-    public int getCount() {
-        openContactsPage();
-        return manager.driver.findElements(By.name("selected[]")).size();
-    }
-
-    private void selectAllContact() {
-        var checkboxes = manager.driver.findElements(By.name("selected[]"));
-        for (var checkbox : checkboxes) {
-            checkbox.click();
-        }
-    }
-
-    public void clickSelectAll() {
-        click(By.xpath("//*[@id=\"MassCB\"]"));
-    }
-
-    public void removeAllContacts() {
-        openContactsPage();
-        clickSelectAll();
-        clickDelete();
-        try {
-            var alert = manager.driver.switchTo().alert();
-            alert.accept();
-        } catch (org.openqa.selenium.NoAlertPresentException e) {
-            System.out.println("No alert present after click delete");
-        }
-        returnToHomePage();
-    }
-
-    public void selectContact() {
-        click(By.name("selected[]"));
-    }
-
-    private void initContactCreation() {
-        click(By.linkText("add new"));
-    }
-
-
-    private void selectDropdown(By locator, String value) {
-        WebElement dropdown = manager.driver.findElement(locator);
-        dropdown.findElement(By.xpath(String.format("//option[. = '%s']", value))).click();
-    }
-
-    public void removeContact(ContactData contact) {
-        openContactsPage();
-        selectContact();
-        clickDelete();
-        try {
-            var alert = manager.driver.switchTo().alert();
-            alert.accept();
-        } catch (org.openqa.selenium.NoAlertPresentException e) {
-            System.out.println("No alert present after click delete");
-        }
-        returnToHomePage();
-    }
-
-    public void createContact(ContactData contact) {
-        openContactsPage();
-        initContactCreation();
-        fillContactForm(contact);
-        submitContactCreation();
-        returnToHomePage();
-    }
-
     private void fillContactForm(ContactData contact) {
+        waitForElement(By.name("firstname"), 5);
+
         if (contact.firstname() != null) {
             type(By.name("firstname"), contact.firstname());
         }
@@ -123,8 +54,96 @@ public class ContactHelper extends HelperBase {
         }
     }
 
+    private void submitContactCreation() {
+        click(By.name("submit"));
+    }
+
+    private void returnToHomePage() {
+        click(By.linkText("home page"));
+    }
+
+    private void clickDelete() {
+        click(By.name("delete"));
+    }
+
+    public int getCount() {
+        openContactsPage();
+        return manager.driver.findElements(By.name("selected[]")).size();
+    }
+
+    private void selectAllContact() {
+        manager.driver.findElements(By.name("selected[]")).forEach(WebElement::click);
+    }
+
+    private void removedSubmit() {
+        click(By.name("remove"));
+    }
+
+    private void findContact(ContactData contact) {
+        WebElement contactCheckbox = manager.driver.findElement(By.cssSelector(String.format("input[value='%s']", contact.id())));
+        contactCheckbox.click();
+    }
+
+    private void selectGroupForRemoved(GroupData group) {
+        Select groupDropdown = new Select(manager.driver.findElement(By.name("group")));
+        groupDropdown.selectByValue(group.id());
+        List<WebElement> contactsInGroup = manager.driver.findElements(By.name("selected[]"));
+        if (contactsInGroup.isEmpty()) {
+            throw new IllegalStateException("Группа не содержит контактов. Удаление невозможно.");
+        }
+    }
+
+    public void clickSelectAll() {
+        click(By.xpath("//*[@id=\"MassCB\"]"));
+    }
+
+    public void selectContact() {
+        click(By.name("selected[]"));
+    }
+
+    private void initContactCreation() {
+        click(By.linkText("add new"));
+    }
+
+
+    private void selectDropdown(By locator, String value) {
+        WebElement dropdown = manager.driver.findElement(locator);
+        dropdown.findElement(By.xpath(String.format("//option[. = '%s']", value))).click();
+    }
+
+    public void waitForElement(By locator, int timeoutInSeconds) {
+        new WebDriverWait(manager.driver, Duration.ofSeconds(timeoutInSeconds))
+                .until(ExpectedConditions.presenceOfElementLocated(locator));
+    }
+
+    private void editContact(int index) {
+        click(By.cssSelector("img[title='Edit']"));
+    }
+
+    private void submitModifyContact() {
+        click(By.name("update"));
+    }
+
     private void selectAttach(By locator, String file) {
         manager.driver.findElement(locator).sendKeys(Paths.get(file).toAbsolutePath().toString());
+    }
+
+    private void addTo() {
+        click(By.name("add"));
+    }
+
+    private void contactNoneGroup(ContactData contact) {
+        manager.driver.findElement(By.name("group")).click();
+        {
+            WebElement dropdown = manager.driver.findElement(By.name("group"));
+            dropdown.findElement(By.xpath("//option[. = '[none]']")).click();
+        }
+        manager.driver.findElement(By.xpath("//option[@value=\'[none]\']")).click();
+
+    }
+
+    private void selectGroup(GroupData group) {
+        new Select(manager.driver.findElement(By.name("new_group"))).selectByValue(group.id());
     }
 
     public List<ContactData> getListContacts() {
@@ -144,7 +163,41 @@ public class ContactHelper extends HelperBase {
         return contacts;
     }
 
-    public void modifyContact(int index, ContactData modifyData) {
+    public void removeContact(ContactData contact) {
+        openContactsPage();
+        selectContact();
+        clickDelete();
+        try {
+            var alert = manager.driver.switchTo().alert();
+            alert.accept();
+        } catch (org.openqa.selenium.NoAlertPresentException e) {
+            System.out.println("No alert present after click delete");
+        }
+        returnToHomePage();
+    }
+
+    public void removeAllContacts() {
+        openContactsPage();
+        clickSelectAll();
+        clickDelete();
+        try {
+            var alert = manager.driver.switchTo().alert();
+            alert.accept();
+        } catch (org.openqa.selenium.NoAlertPresentException e) {
+            System.out.println("No alert present after click delete");
+        }
+        returnToHomePage();
+    }
+
+    public void createContact(ContactData contact) {
+        openContactsPage();
+        initContactCreation();
+        fillContactForm(contact);
+        submitContactCreation();
+        returnToHomePage();
+    }
+
+    public void modifyWithPhotoContact(int index, ContactData modifyData) {
         openContactsPage();
         click(By.xpath(String.format("//tr[@name='entry'][%d]/td[8]/a/img", index + 1)));
         fillContactForm(modifyData);
@@ -153,8 +206,43 @@ public class ContactHelper extends HelperBase {
 
     }
 
-    private void submitModifyContact() {
-        click(By.name("update"));
+    public void modifyContact(int index, ContactData modifyData) {
+        openContactsPage();
+        editContact(index);
+        fillContactForm(modifyData);
+        submitModifyContact();
+        returnToHomePage();
+
+    }
+
+    public void create(ContactData contact) {
+        initContactCreation();
+        fillContactForm(contact);
+        submitContactCreation();
+        returnToHomePage();
+    }
+
+    public void createB(ContactData contact, GroupData group) {
+        initContactCreation();
+        fillContactForm(contact);
+        selectGroup(group);
+        submitContactCreation();
+        returnToHomePage();
+    }
+
+    public void addIntoGroup(ContactData contact, GroupData group) {
+        openContactsPage();
+        contactNoneGroup(contact);
+        findContact(contact);
+        addTo();
+    }
+
+    public void removed(ContactData contact, GroupData group) {
+        openContactsPage();
+        selectGroupForRemoved(group);
+        findContact(contact);
+        removedSubmit();
+        openContactsPage();
     }
 
 }

@@ -3,6 +3,8 @@ package model;
 import java.util.Objects;
 
 public class ContactData {
+    public String address;
+    private String id;
     private String photo;
     private String firstname;
     private String lastname;
@@ -50,7 +52,14 @@ public class ContactData {
         this.photo = photo;
         return this;
     }
-
+    public ContactData withId (String id) {
+        this.id = id;
+        return this;
+    }
+    public ContactData withAddress(String address) {
+        this.address = address;
+        return this;
+    }
     public String firstname() {
         return firstname;
     }
@@ -81,21 +90,23 @@ public class ContactData {
 
     public String photo(){return photo;}
 
+    public String id() {
+        return id;
+    }
+
+    public String address() { return address;
+    }
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ContactData that = (ContactData) o;
-        return Objects.equals(firstname, that.firstname) &&
-                Objects.equals(lastname, that.lastname) &&
-                Objects.equals(email, that.email) &&
-                Objects.equals(bday, that.bday) &&
-                Objects.equals(bmonth, that.bmonth) &&
-                Objects.equals(byear, that.byear);
+        return Objects.equals(id(), that.id());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(firstname, lastname, email, bday, bmonth, byear);
+        return Objects.hash(id());
     }
+
 }

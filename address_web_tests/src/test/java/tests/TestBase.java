@@ -1,6 +1,7 @@
 package tests;
 
 import manager.ApplicationManager;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 
 import java.io.File;
@@ -33,8 +34,9 @@ public class TestBase {
         return result.toString();
     }
 
-    public static String randomEmail() {
-        return randomContact(8) + "@example.com";
+    @AfterEach
+    void checkDatabaseConsistency(){
+        app.jdbc().checkConsistecy();
     }
 
     public static String randomPhoto(String dir) {
