@@ -10,39 +10,37 @@ public class ContactRecord {
     public int id;
     @Column(name = "firstname")
     public String firstname;
+    @Column(name = "middlename")
+    public String middlename;
     @Column(name = "lastname")
     public String lastname;
+    @Column(name = "nickname")
+    public String nickname;
+    @Column(name = "company")
+    public String company;
+    @Column(name = "title")
+    public String title;
     @Column(name = "address")
     public String address;
+    @Column(name = "home")
+    public String home;
+    @Column(name = "mobile")
+    public String mobile;
     @Column(name = "email")
     public String email;
-    @Transient
-    public String middlename;
-    @Transient
-    public String nickname;
-    @Transient
-    public String company;
-    @Transient
-    public String title;
-    @Transient
-    public String home;
-    @Transient
-    public String mobile;
-    @Transient
+    @Column(name = "work")
     public String work;
-    @Transient
-    public String fax;
-    @Transient
+    @Column(name = "email2")
     public String email2;
-    @Transient
+    @Column(name = "email3")
     public String email3;
-    @Transient
+    @Column(name = "homepage")
     public String homepage;
 
     public ContactRecord() {
     }
 
-    public ContactRecord(int id, String firstname, String lastname, String address, String email) {
+    public ContactRecord(int id, String firstname, String lastname, String address, String email, String mobile) {
         this.id = id;
 
         this.firstname = firstname;
@@ -52,6 +50,8 @@ public class ContactRecord {
         this.address = address;
 
         this.email = email;
+
+        this.mobile = mobile;
     }
 
 }

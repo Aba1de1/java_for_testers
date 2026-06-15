@@ -19,7 +19,7 @@ public class AddContactTest extends TestBase {
         var result = new ArrayList<ContactData>();
         for (var firstname : List.of("", "First")) {
             for (var lastname : List.of("", "Last")) {
-                for (var email : List.of("", "first.last@email.com")) {
+                for (var email : List.of("", Common.randomEmail())) {
                     result.add(new ContactData().withFirstname(firstname).withLastname(lastname).withEmail(email));
                 }
             }

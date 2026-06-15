@@ -10,9 +10,19 @@ public class ContactData {
     private String lastname;
     private String nickname;
     private String email;
+    private String email2;
+    private String email3;
     private String bday;
     private String bmonth;
     private String byear;
+    private String home;
+    private String mobile;
+    private String work;
+
+    public ContactData withHome(String home) {
+        this.home = home;
+        return this;
+    }
 
     public ContactData withFirstname(String firstname) {
         this.firstname = firstname;
@@ -34,6 +44,26 @@ public class ContactData {
         return this;
     }
 
+    public ContactData withEmail3(String email3) {
+        this.email3 = email3;
+        return this;
+    }
+
+    public ContactData withEmail2(String email2) {
+        this.email2 = email2;
+        return this;
+    }
+
+    public ContactData withWork(String work) {
+        this.work = work;
+        return this;
+    }
+
+    public ContactData withMobile(String mobile) {
+        this.mobile = mobile;
+        return this;
+    }
+
     public ContactData withBday(String bday) {
         this.bday = bday;
         return this;
@@ -48,18 +78,22 @@ public class ContactData {
         this.byear = byear;
         return this;
     }
-    public ContactData withPhoto(String photo){
+
+    public ContactData withPhoto(String photo) {
         this.photo = photo;
         return this;
     }
-    public ContactData withId (String id) {
+
+    public ContactData withId(String id) {
         this.id = id;
         return this;
     }
+
     public ContactData withAddress(String address) {
         this.address = address;
         return this;
     }
+
     public String firstname() {
         return firstname;
     }
@@ -72,8 +106,14 @@ public class ContactData {
         return nickname;
     }
 
-    public String email() {
-        return email;
+    public String email() { return email;}
+
+    public String email2() {
+        return email2;
+    }
+
+    public String email3() {
+        return email3;
     }
 
     public String bday() {
@@ -84,18 +124,33 @@ public class ContactData {
         return bmonth;
     }
 
-    public String byear() {
-        return byear;
-    }
+    public String byear() { return byear; }
 
-    public String photo(){return photo;}
+    public String photo() {
+        return photo;
+    }
 
     public String id() {
         return id;
     }
 
-    public String address() { return address;
+    public String address() {
+        return address;
     }
+
+    public String home() {
+        return home;
+    }
+
+    public String work() {
+        return work;
+    }
+
+
+    public String mobile() {
+        return mobile;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -108,5 +163,4 @@ public class ContactData {
     public int hashCode() {
         return Objects.hash(id());
     }
-
 }

@@ -3,13 +3,16 @@ package generator;
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 import common.Common;
+import model.ContactData;
 import model.GroupData;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Generator {
     @Parameter(names = {"--type", "-t"})
@@ -43,23 +46,23 @@ public class Generator {
         } else {
             throw new IllegalArgumentException("Неизвестный тип данных " + type);
         }
+    }
 
-
+    private Object generateData(Supplier<Object> dataSupplier) {
+        return Stream.generate(dataSupplier).limit(count).collect(Collectors.toList());
     }
 
     private Object generateGroups() {
-        var result = new ArrayList<GroupData>();
-        for (int i = 0; i < 5; i++) {
-            result.add(new GroupData()
-                    .withName(Common.randomString(i * 10))
-                    .withHeader(Common.randomString(i * 10))
-                    .withFooter(Common.randomString(i * 10)));
-        }
-        return result;
+        return generateData(() -> new GroupData()
+                .withName(Common.randomString(10))
+                .withHeader(Common.randomString(10))
+                .withFooter(Common.randomString(10)));
     }
 
     private Object generateContacts() {
-        return null;
+        return generateData(() -> new ContactData()
+                .withFirstname(Common.randomString(10))
+                .withLastname(Common.randomString(10)));
     }
 
     private void save(Object data) throws IOException {
