@@ -14,7 +14,8 @@ public class SessionHelper extends HelperBase {
         click(By.cssSelector("input[type='submit']"));
     }
 
-    public boolean isLggedIn() {
+    public boolean isLoggedIn() {
         return isElementPresent(By.cssSelector("span.user-info"));
     }
+
 }
