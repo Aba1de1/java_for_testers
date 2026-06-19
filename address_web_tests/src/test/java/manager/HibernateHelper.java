@@ -62,7 +62,7 @@ public class HibernateHelper extends HelperBase {
 
     private static ContactRecord convert(ContactData data) {
         var id = data.id();
-        if ("".equals(id)) {
+        if (id == null) {
             id = "0";
         }
         return new ContactRecord(Integer.parseInt(id), data.firstname(), data.lastname(), data.address(), data.email(), data.mobile());
