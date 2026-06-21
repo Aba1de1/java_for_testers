@@ -5,6 +5,8 @@ import okhttp3.*;
 import java.io.IOException;
 import java.net.CookieManager;
 
+import static io.swagger.client.auth.OAuthFlow.password;
+
 public class HttpSessionHelper extends HelperBase {
 
     OkHttpClient client;
@@ -37,11 +39,31 @@ public class HttpSessionHelper extends HelperBase {
                 .build();
         try (Response response = client.newCall(request).execute()) {
             if (!response.isSuccessful()) throw new RuntimeException("Unexpected code " + response);
+            assert response.body() != null;
             String body = response.body().string();
             return body.contains("<span class=\"user-info\">");
 
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    public boolean loginApi(String username, String newPassword) {
+        try {
+            var client = new OkHttpClient();
+            var request = new Request.Builder()
+                    .url(manager.property("web.baseUrl") + "/login.php")
+                    .post(RequestBody.create(
+                            MediaType.parse("application/x-www-form-urlencoded"),
+                            String.format("username=%s&password=%s", username, password)
+                    ))
+                    .build();
+
+            try (var response = client.newCall(request).execute()) {
+                return response.isSuccessful();
+            }
+        } catch (IOException e) {
+            throw new RuntimeException("Error while logging in", e);
         }
     }
 }

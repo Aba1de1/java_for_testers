@@ -2,7 +2,7 @@ package x5.mantis.manager;
 
 import org.openqa.selenium.By;
 
-public class RegistrationHelper extends HelperBase{
+public class RegistrationHelper extends HelperBase {
 
     public RegistrationHelper(ApplicationManager manager) {
         super(manager);
@@ -24,7 +24,8 @@ public class RegistrationHelper extends HelperBase{
     }
 
     public void proceed() {
-        click(By.xpath("//a[contains(text(), 'Proceed')]"));;
+        click(By.xpath("//a[contains(text(), 'Proceed')]"));
+        ;
     }
 
     public void clickUpdateUser() {

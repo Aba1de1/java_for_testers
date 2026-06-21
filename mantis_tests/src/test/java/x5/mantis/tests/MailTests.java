@@ -26,7 +26,9 @@ public class MailTests extends TestBase {
     @Test
     void canExtractUrl() {
         List<MailMassage> messages;
-        messages = app.mail().receive("qwe@localhost", "password", Duration.ofSeconds(60));
+        messages = app.mail().receive("qwe@localhost",
+                "password",
+                Duration.ofSeconds(60));
         var text = messages.get(0).content();
         var pattern = Pattern.compile("http://\\S*");
         var matcher = pattern.matcher(text);

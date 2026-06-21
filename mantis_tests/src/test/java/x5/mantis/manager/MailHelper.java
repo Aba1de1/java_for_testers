@@ -5,6 +5,7 @@ import x5.mantis.model.MailMassage;
 
 import java.io.IOException;
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
@@ -48,6 +49,7 @@ public class MailHelper extends HelperBase {
         throw new RuntimeException("No mail");
     }
 
+
     private static Folder getInbox(String username, String password) {
         try {
             var session = Session.getInstance(new Properties());
@@ -58,7 +60,6 @@ public class MailHelper extends HelperBase {
             throw new RuntimeException(e);
         }
     }
-
     public void drain(String username, String password) {
         var inbox = getInbox(username, password);
         try {

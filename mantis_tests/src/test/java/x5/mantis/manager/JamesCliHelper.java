@@ -10,10 +10,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 
-public class JameCliHelper extends HelperBase {
+public class JamesCliHelper extends HelperBase {
     private final String workingDir;
 
-    public JameCliHelper(ApplicationManager manager) {
+    public JamesCliHelper(ApplicationManager manager) {
         super(manager);
         this.workingDir = System.getProperty("james.workingDir", "c:/Education/james-server-jpa-guice");
     }
