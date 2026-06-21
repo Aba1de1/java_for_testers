@@ -24,28 +24,6 @@ public class CreatedGroupTest extends TestBase {
 
     public static List<GroupData> groupProvider() throws IOException {
         var result = new ArrayList<GroupData>();
-   /*     for (var name : List.of("", "group name")) {
-            for (var header : List.of("", "group header")) {
-                for (var footer : List.of("", "group footer")) {
-                    result.add(new GroupData().withName(name).withHeader(header).withFooter(footer));
-                }
-            }
-        }
-        for (int i = 0; i < 5; i++) {
-            result.add(new GroupData()
-                    .withName(Common.randomString(i * 10))
-                    .withHeader(Common.randomString(i * 10))
-                    .withFooter(Common.randomString(i * 10)));
-        }*/
-        /*var = json = "";
-        try (var reader = new FileReader("groups.json");
-             var breader = new BufferedReader(reader)) {
-            var line = breader.readLine();
-            while (line != null) {
-                json = json + line;
-                line = breader.readLine();
-            }
-        }*/
 
         var json = Files.readString(Paths.get("groups.json"));
         ObjectMapper mapper = new ObjectMapper();
