@@ -21,15 +21,14 @@ public class GroupRecord {
     @Column(name = "group_footer")
     public String footer;
 
-    @Transient
-    public Date depreceted;
-
     @ManyToMany
     @JoinTable(
             name = "address_in_groups",
             joinColumns = @JoinColumn(name = "group_id"),
             inverseJoinColumns = @JoinColumn(name = "id"))
     public List<ContactRecord> contacts;
+
+    public Date deprecated = new Date();
 
     public GroupRecord() {
     }
