@@ -28,10 +28,7 @@ public class ApplicationManager {
 
     private HibernateHelper hmb;
 
-    private Properties properties;
-
     public void init(String browser, Properties properties) throws MalformedURLException {
-        this.properties = properties;
         if (driver == null) {
             var seleniumServer = properties.getProperty("seleniumServer");
             if ("firefox".equals(browser)) {

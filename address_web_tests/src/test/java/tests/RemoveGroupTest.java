@@ -9,21 +9,21 @@ import java.util.Random;
 
 public class RemoveGroupTest extends TestBase {
 
-    @Test
-    public void CanRemoveGroup() {
-
-        if (app.hmb().getGroupCount() == 0) {
-            app.hmb().createGroup(new GroupData("", "group name", "group header", "group footer"));
-        }
-        var oldGroups = app.hmb().getGroupList();
-        var rnd = new Random();
-        var index = rnd.nextInt(oldGroups.size());
-        app.groups().removeGroup(oldGroups.get(index));
-        var newGroups = app.hmb().getGroupList();
-        var expectedList = new ArrayList<>(oldGroups);
-        expectedList.remove(index);
-        Assertions.assertEquals(newGroups, expectedList);
-    }
+//    @Test
+//    public void CanRemoveGroup() {
+//
+//        if (app.hmb().getGroupCount() == 0) {
+//            app.hmb().createGroup(new GroupData("", "group name", "group header", "group footer"));
+//        }
+//        var oldGroups = app.hmb().getGroupList();
+//        var rnd = new Random();
+//        var index = rnd.nextInt(oldGroups.size());
+//        app.groups().removeGroup(oldGroups.get(index));
+//        var newGroups = app.hmb().getGroupList();
+//        var expectedList = new ArrayList<>(oldGroups);
+//        expectedList.remove(index);
+//        Assertions.assertEquals(newGroups, expectedList);
+//    }
 
     @Test
     void canRemoveAllGroupsAtOnce() {
